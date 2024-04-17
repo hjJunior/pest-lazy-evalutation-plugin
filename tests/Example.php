@@ -1,80 +1,43 @@
 <?php
 
-use function Pest\Gwt\scenario;
-use function PHPUnit\Framework\assertEquals;
+use function Pest\Let\context;
+use function Pest\Let\expectSubject;
+use function Pest\Let\get;
+use function Pest\Let\let;
+use function Pest\Let\subject;
 
-scenario('given and when returning nothing')
-    ->given(function () {
-    })
-    ->when(function () {
-    })
-    ->then(function () {
-        assertEquals(1, 1);
+function testMe($param)
+{
+    return $param;
+}
+
+subject(fn () => testMe(get('param2')));
+let('param1', fn () => 1);
+
+it('can get param1 from root let', function () {
+    expect(get('param1'))->toEqual(1);
+});
+
+it('cannot get non defined variables', function () {
+    get('non-existent-param');
+})->throws('Attempt to read non-existent-param, when was not set');
+
+context('when param2 is 3', function () {
+    let('param2', fn () => 3);
+
+    it('returns param3 value', function () {
+        expectSubject()->toEqual(3);
     });
 
-scenario('given and when returning non array values')
-    ->given(function () {
-        return 5;
-    })
-    ->when(function (int $number) {
-        return $number * 10;
-    })
-    ->then(function (int $answer) {
-        assertEquals(50, $answer);
+    it('returns param3 value multiple times in same scope', function () {
+        expectSubject()->toEqual(3);
     });
+});
 
-scenario('given and when returning arrays')
-    ->given(function () {
-        return [5];
-    })
-    ->when(function (int $number) {
-        return [$number * 10];
-    })
-    ->then(function (int $answer) {
-        assertEquals(50, $answer);
+context('when param2 is 4', function () {
+    let('param2', fn () => 4);
+
+    it('can work', function () {
+        expectSubject()->toEqual(4);
     });
-
-scenario('writing testes without given')
-    ->when(function () {
-        return [5 * 10];
-    })
-    ->then(function (int $answer) {
-        assertEquals(50, $answer);
-    });
-
-scenario('expecting exception')
-    ->when(function () {
-        throw new Exception('Woops!');
-    })
-    ->throws(Exception::class, 'Woops!');
-
-scenario('expecting exception without message')
-    ->when(function () {
-        throw new Exception('Woops!');
-    })
-    ->throws(Exception::class);
-
-scenario('not returning an array works')
-    ->given(function () {
-        return 'this is not an array';
-    })
-    ->when(function (string $s) {
-        return $s;
-    })
-    ->then(function (string $s) {
-        expect($s)->toBe('this is not an array');
-    });
-
-scenario('returning an arrayable class works')
-    ->given(function () {
-        return new class()
-        {
-            public $a;
-        };
-    })
-    ->when(function ($c) {
-        return $c;
-    })
-    ->then(function ($c) {
-        expect((array) $c)->toBe(['a' => null]);
-    });
+});

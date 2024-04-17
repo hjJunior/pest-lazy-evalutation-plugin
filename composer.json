@@ -1,6 +1,6 @@
 {
-    "name": "milroyfraser/pest-plugin-gwt",
-    "description": "Given When Then(GWT) Plugin for Pest",
+    "name": "cfx/pest-let",
+    "description": "Let lazy evaluation helpers you in your Pest tests",
     "keywords": [
         "php",
         "framework",
@@ -10,7 +10,11 @@
         "testing",
         "plugin",
         "AAA",
-        "GWT"
+        "given",
+        "let",
+        "lazy evaluation",
+        "rspec",
+        "bdd"
     ],
     "license": "MIT",
     "require": {
@@ -20,7 +24,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Pest\\Gwt\\": "src/"
+            "Pest\\Let\\": "src/"
         },
         "files": [
             "src/Autoload.php"
